@@ -21,13 +21,34 @@ def rename_files_in_output():
         print("Error: REMOVE_STR not found in .env file. Please set REMOVE_STR in workspace/.env")
         return
     
-    # output 文件夹路径（相对于脚本所在目录）
+    # input 和 output 文件夹路径（相对于脚本所在目录）
+    input_dir = os.path.join(os.path.dirname(__file__), '..', 'input')
     output_dir = os.path.join(os.path.dirname(__file__), '..', 'output')
+    
+    # 统计 input 目录中的文件数量
+    input_file_count = 0
+    if os.path.exists(input_dir):
+        for filename in os.listdir(input_dir):
+            filepath = os.path.join(input_dir, filename)
+            if os.path.isfile(filepath):
+                input_file_count += 1
     
     # 确保 output 目录存在
     if not os.path.exists(output_dir):
         print(f"Output directory {output_dir} does not exist.")
+        # 输出统计信息
+        print(f"\n=== 统计信息 ===")
+        print(f"Input 目录文件数量: {input_file_count}")
+        print(f"Output 目录文件数量: 0")
+        print(f"未处理的文件数量: {input_file_count}")
         return
+    
+    # 统计 output 目录中的文件数量（处理前）
+    output_file_count_before = 0
+    for filename in os.listdir(output_dir):
+        filepath = os.path.join(output_dir, filename)
+        if os.path.isfile(filepath):
+            output_file_count_before += 1
     
     # 遍历 output 目录中的所有文件
     for filename in os.listdir(output_dir):
@@ -72,6 +93,19 @@ def rename_files_in_output():
             print(f"Renamed: {filename} -> {new_filename}")
         else:
             print(f"No change: {filename}")
+    
+    # 统计 output 目录中的文件数量（处理后）
+    output_file_count_after = 0
+    for filename in os.listdir(output_dir):
+        filepath = os.path.join(output_dir, filename)
+        if os.path.isfile(filepath):
+            output_file_count_after += 1
+    
+    # 输出统计信息
+    print(f"\n=== 统计信息 ===")
+    print(f"Input 目录文件数量: {input_file_count}")
+    print(f"Output 目录文件数量: {output_file_count_after}")
+    print(f"未处理的文件数量: {input_file_count - output_file_count_after}")
 
 if __name__ == "__main__":
     rename_files_in_output()
