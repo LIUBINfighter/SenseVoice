@@ -1,12 +1,18 @@
 import os
 import subprocess
 from mutagen import File
+import tiktoken
 
 def count_text_tokens(text):
     """
-    计算文本的 token 数量（简单按空白分词计数）
+    计算文本的 token 数量（使用 tiktoken，更精确）
     """
-    return len(text.split())
+    try:
+        encoding = tiktoken.get_encoding("cl100k_base")  # GPT-3.5/4 编码
+        return len(encoding.encode(text))
+    except Exception as e:
+        print(f"Error encoding text: {e}")
+        return len(text.split())  # 回退到简单分词
 
 def get_audio_duration_ffprobe(file_path):
     """
