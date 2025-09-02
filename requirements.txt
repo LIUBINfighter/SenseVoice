@@ -10,3 +10,5 @@ fastapi>=0.111.1
 tqdm
 python-dotenv
 mutagen
+openai
+tiktoken
